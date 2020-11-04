@@ -1,7 +1,7 @@
-﻿<Application x:Class="TODOlight.App"
+﻿<Application x:Class="TODOlite.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:TODOlight"
+             xmlns:local="clr-namespace:TODOlite"
              StartupUri="MainWindow.xaml"
              xmlns:hc="https://handyorg.github.io/handycontrol">
     <Application.Resources>
