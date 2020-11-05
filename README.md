@@ -25,7 +25,7 @@ Clone the source locally:
 
 ```sh
 $ git clone https://github.com/marijoblaz/TODOlite
-$ cd COVID-19_Croatia_viewer
+$ cd TODOlite
 ```
 
 ## Built with
