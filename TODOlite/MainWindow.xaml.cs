@@ -5,8 +5,6 @@ using System.Configuration;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Squirrel;
-using System.Threading.Tasks;
 
 namespace TODOlite
 {
@@ -20,24 +18,6 @@ namespace TODOlite
         {
             InitializeComponent();
             UpdateDB(true);
-            _ = updateApp();
-        }
-
-        private async Task updateApp()
-        {
-            try
-            {
-                using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/marijoblaz/TODOlite"))
-                {
-                    await mgr.Result.UpdateApp();
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            
         }
 
         private void InitializeTags(List<tagModel> tagModels)
@@ -131,14 +111,24 @@ namespace TODOlite
                 pinBox.Visibility = Visibility.Hidden;
                 textBox.IsEnabled = true;
                 scrollView.Visibility = Visibility.Visible;
-
-                Growl.SuccessGlobal($"Welcome");
+                logutButton.IsEnabled = true;
+                pinBox.Password = "";
 
                 if (tagPanel.Children.Count == 0)
                 {
                     imageTip.Visibility = Visibility.Visible;
                 }
             }
+        }
+
+        private void logutButton_Click(object sender, RoutedEventArgs e)
+        {
+            pinBox.Visibility = Visibility.Visible;
+            scrollView.Visibility = Visibility.Hidden;
+            imageTip.Visibility = Visibility.Hidden;
+
+            textBox.IsEnabled = false;
+            logutButton.IsEnabled = false;
         }
     }
 }
