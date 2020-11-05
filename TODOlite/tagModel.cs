@@ -8,13 +8,13 @@ namespace TODOlite
 {
     class tagModel
     {
-        public tagModel(byte priority, string content)
+        public tagModel(int priority, string content)
         {
             Priority = priority;
             Content = content;
         }
 
-        public byte Priority { get; set; }
+        public int Priority { get; set; }
         public string Content { get; set; }
     }
 }

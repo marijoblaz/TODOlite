@@ -10,11 +10,13 @@
         Height="320"
         Width="250" 
         WindowStartupLocation="CenterScreen" 
-        
         WindowStyle="None" 
         ResizeMode="NoResize"
         AllowsTransparency="True"
-        Background="Transparent">
+        Background="Transparent" 
+        Closing="Window_Closing" 
+        Icon="Logo.ico">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
@@ -26,8 +28,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
 
@@ -35,21 +37,22 @@
                  Grid.Row="0"
                  Grid.ColumnSpan="5"
                  Grid.RowSpan="2"
-                 Background="AliceBlue"
+                 Background="#000000"
                  CornerRadius="15,15,0,0"/>
-        
+
         <Border  x:Name="windowRectangle"
                    Grid.Row="0"
                    Grid.Column="0"
                    Grid.ColumnSpan="10"
                    Grid.RowSpan="10"
                    CornerRadius="15,15,15,15"
-                   Background="DarkGray"
+                   Background="#121212"
                    Opacity="0.8"
                    MouseDown="Window_MouseDown" />
 
 
-        
+
+
         <Button x:Name="closeButton"
                 Grid.Column="1" 
                 Grid.Row="0" 
@@ -59,40 +62,61 @@
                 BorderBrush="Transparent"
                 HorizontalAlignment="Right"
                 hc:IconElement.Geometry="{StaticResource DeleteGeometry}" Click="closeButton_Click"
-                Foreground="Black"
+                Foreground="{StaticResource PrimaryBrush}"
                 hc:IconElement.Height="10"/>
-
-        <hc:ScrollViewer Grid.Column="1" 
-                        Grid.Row="2" 
-                        Grid.ColumnSpan="3"
-                        Grid.RowSpan="2"
-                        Name="ScrollViewerDemo" 
-                        IsInertiaEnabled="True" 
-                        Margin="0,10,0,0">
-            <hc:TagPanel x:Name="tagPanel"
-                         Orientation="Horizontal" 
-                         VerticalAlignment="Top"
-                         ShowAddButton="False" >
-            </hc:TagPanel>
-        </hc:ScrollViewer>
-
 
         <hc:TextBox Grid.Column="1" 
                     Grid.Row="3" 
-                    Grid.ColumnSpan="2"
-                    Width="135"
+                    Grid.ColumnSpan="3"
                     VerticalAlignment="Bottom"
-                    Margin="5,0"
-                    x:Name="textBox" KeyDown="textBox_KeyDown"/>
+                    Margin="5"
+                    x:Name="textBox" 
+                    KeyDown="textBox_KeyDown" 
+                    IsEnabled="False"
+                    hc:InfoElement.Placeholder="Try adding !1 or !3"/>
 
-        <hc:ButtonGroup Grid.Column="3" 
-                        Grid.Row="3"
-                        x:Name="buttonGroup"
-                        VerticalAlignment="Bottom">
-            <RadioButton x:Name="rb1" Content="1" Background="#B4F8C8" IsChecked="True"/>
-            <RadioButton x:Name="rb2" Content="2" Background="#A0E7E5"/>
-            <RadioButton x:Name="rb3" Content="3" Background="#FFAEBC"/>
-        </hc:ButtonGroup>
         
+        <hc:ScrollViewer Grid.Column="1" 
+                         Grid.Row="2" 
+                         Grid.RowSpan="1"
+                         Grid.ColumnSpan="3"
+                         
+                         Height="240"
+                         Visibility="Hidden"
+                         x:Name="scrollView">
+            <hc:TagPanel x:Name="tagPanel"
+                         Orientation="Horizontal" 
+                         VerticalAlignment="Top"
+                         ShowAddButton="False">
+            </hc:TagPanel>
+        </hc:ScrollViewer>
+
+        <hc:PinBox  x:Name="pinBox"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center" 
+                    Length="4" 
+                    Completed="pinBox_Completed" />
+
+        <Image x:Name="imageTip" 
+               Grid.Row="2" 
+               Grid.Column="1"
+               Grid.ColumnSpan="3"
+               Source="./Images/Tip.png"
+               Visibility="Hidden"/>
+        
+        
+        <Image Grid.Row="0" 
+               Grid.Column="1"
+               Grid.ColumnSpan="3"
+               IsEnabled="False"
+               HorizontalAlignment="Left"
+               Width="90"
+               Height="30"
+               Margin="0"
+               Source="./Images/logo.png"/>
+
+
     </Grid>
 </Window>

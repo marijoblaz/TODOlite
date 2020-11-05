@@ -2,19 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Squirrel;
+using System.Threading.Tasks;
 
 namespace TODOlite
 {
@@ -23,53 +15,129 @@ namespace TODOlite
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        List<tagModel> tagModels = new List<tagModel>();
+
         public MainWindow()
         {
             InitializeComponent();
+            UpdateDB(true);
+            _ = updateApp();
+        }
 
-           
+        private async Task updateApp()
+        {
+            try
+            {
+                using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/marijoblaz/TODOlite"))
+                {
+                    await mgr.Result.UpdateApp();
+                }
+            }
+            catch (Exception)
+            {
 
-           System.Windows.MessageBox.Show(ConfigurationManager.ConnectionStrings["MyConnectionStringKey"].ConnectionString);
+                throw;
+            }
+            
+        }
 
+        private void InitializeTags(List<tagModel> tagModels)
+        {
+            foreach (var item in tagModels)
+            {
+                //Create and set tag
+                setTag(item.Priority, item.Content);
+            }
+        }
 
+        /// <summary>
+        /// True to read, false to write
+        /// </summary>
+        /// <param name="readWrite"></param>
+        private void UpdateDB(bool readWrite)
+        {
+            try
+            {
+                //Connect to DB
+                DB dB = new DB(ConfigurationManager.ConnectionStrings["MyConnectionStringKey"].ConnectionString);
+
+                //Get DATA
+                List<tagModel> tagModels = dB.GetTagModels();
+
+                //Display or push to DB
+                if (readWrite) InitializeTags(tagModels);
+                else dB.Push(tagPanel.Children);
+
+            }
+            catch { if (readWrite) Growl.WarningGlobal($"Database could not be accessed!");}
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+            //Drag window
             if(Mouse.LeftButton == MouseButtonState.Pressed)
             {
                 this.DragMove();
             }
         }
 
-        private void closeButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-
-        private void Tag_Closing(object sender, EventArgs e)
-        {
-            //Tag is closing do stuff
-        }
-
+        private void closeButton_Click(object sender, RoutedEventArgs e) => this.Close();
+        
         private void textBox_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Return && textBox.Text.Length > 0)
             {
-                Tag tag = new Tag();
-                tag.Content = textBox.Text;
+                //Clear the tip image
+                imageTip.IsEnabled = false;
+                imageTip.Visibility = Visibility.Hidden;
 
+                //Create and set tag
+                setTag(decryppter.GetPriority(textBox.Text), decryppter.GetContent(textBox.Text));
 
-
-                if ((bool)rb1.IsChecked) tag.Background = new SolidColorBrush(Color.FromRgb(130, 228, 140));
-                else if ((bool)rb2.IsChecked) tag.Background = new SolidColorBrush(Color.FromRgb(130, 191, 229));
-                else tag.Background = new SolidColorBrush(Color.FromRgb(255, 124, 138));
-
+                //Clear the textfield
                 textBox.Text = String.Empty;
-                tagPanel.Children.Add(tag);
+                
+            }
+        }
+
+        private void setTag(int prior, string content)
+        {
+            Tag tag = new Tag();
+
+            tag.Content = content;
+
+            switch (prior)
+            {
+                case 1:
+                    tag.Background = new SolidColorBrush(Color.FromRgb(130, 228, 140));
+                    break;
+
+                case 2:
+                    tag.Background = new SolidColorBrush(Color.FromRgb(130, 191, 229));
+                    break;
+
+                case 3:
+                    tag.Background = new SolidColorBrush(Color.FromRgb(255, 124, 138));
+                    break;
+            }
+            tagPanel.Children.Add(tag);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => UpdateDB(false);
+
+        private void pinBox_Completed(object sender, RoutedEventArgs e)
+        {
+            if(pinBox.Password == "1234")
+            {
+                pinBox.Visibility = Visibility.Hidden;
+                textBox.IsEnabled = true;
+                scrollView.Visibility = Visibility.Visible;
+
+                Growl.SuccessGlobal($"Welcome");
+
+                if (tagPanel.Children.Count == 0)
+                {
+                    imageTip.Visibility = Visibility.Visible;
+                }
             }
         }
     }
