@@ -5,7 +5,7 @@
 
 <h4 align="center">Simple TODO task manager</h4>
 
-ToDo lite is a siple lite version of ToDo task manager :computer:.
+ToDo lite is a simple lite version of ToDo task manager that uses tags to store your tasks :) :computer:.
 Build using C# and WPF :rocket: environment.
 
 # Demo
